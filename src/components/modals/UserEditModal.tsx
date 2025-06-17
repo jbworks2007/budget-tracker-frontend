@@ -20,6 +20,7 @@ export default function UserEditModal({ isOpen, onClose, type, categoryId, categ
   const user = userCookie ? JSON.parse(userCookie) : null;
 
   const [inputValue, setInputValue] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (prevAmt !== undefined) {
@@ -28,6 +29,7 @@ export default function UserEditModal({ isOpen, onClose, type, categoryId, categ
   }, [prevAmt]);
 
   const handleSubmit = async () => {
+    setSubmitting(true);
     if (categoryName && inputValue) {
       // onSubmit(selectedOption, inputValue);
       if (type === "income") {
@@ -41,6 +43,7 @@ export default function UserEditModal({ isOpen, onClose, type, categoryId, categ
       setInputValue(0);
       onClose();
     }
+    setSubmitting(false);
   };
 
   if (!isOpen) return null;
@@ -81,6 +84,7 @@ export default function UserEditModal({ isOpen, onClose, type, categoryId, categ
           </button>
           <button
             onClick={handleSubmit}
+            disabled={submitting}
             className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
           >
             Submit

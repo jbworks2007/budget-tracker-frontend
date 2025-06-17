@@ -24,8 +24,10 @@ export default function UserCategoryModal({ isOpen, onClose, type }: ModalProps)
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedid, setSelectedId] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async () => {
+    setSubmitting(true);
     if (selectedOption && inputValue) {
       // onSubmit(selectedOption, inputValue);
       if (type === "income") {
@@ -40,6 +42,7 @@ export default function UserCategoryModal({ isOpen, onClose, type }: ModalProps)
       setInputValue("");
       onClose();
     }
+    setSubmitting(false);
   };
 
   const getCategory = async () => {
@@ -133,6 +136,7 @@ export default function UserCategoryModal({ isOpen, onClose, type }: ModalProps)
             </button>
             <button
               onClick={handleSubmit}
+              disabled={submitting}
               className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
             >
               Submit

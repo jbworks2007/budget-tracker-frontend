@@ -16,6 +16,7 @@ export default function UpdateBudgetModal({ isOpen, onClose, prevAmt }: ModalPro
   const user = userCookie ? JSON.parse(userCookie) : null;
 
   const [inputValue, setInputValue] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (prevAmt !== undefined) {
@@ -24,6 +25,7 @@ export default function UpdateBudgetModal({ isOpen, onClose, prevAmt }: ModalPro
   }, [prevAmt]);
 
   const handleSubmit = async () => {
+    setSubmitting(true);
     if (inputValue) {
       // onSubmit(selectedOption, inputValue);
       const data = await modifyUserBudget(user._id, inputValue);
@@ -31,6 +33,7 @@ export default function UpdateBudgetModal({ isOpen, onClose, prevAmt }: ModalPro
       setInputValue(0);
       onClose();
     }
+    setSubmitting(false);
   };
 
   if (!isOpen) return null;
@@ -71,6 +74,7 @@ export default function UpdateBudgetModal({ isOpen, onClose, prevAmt }: ModalPro
           </button>
           <button
             onClick={handleSubmit}
+            disabled={submitting}
             className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
           >
             Submit

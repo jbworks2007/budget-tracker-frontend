@@ -14,15 +14,11 @@ export default function AddNewCategoryModal({ isOpen, onClose }: ModalProps) {
   const userCookie = Cookies.get("user");
   const user = userCookie ? JSON.parse(userCookie) : null;
 
+  const [submitting, setSubmitting] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  // useEffect(() => {
-  //   if (prevAmt !== undefined) {
-  //     setInputValue(prevAmt);
-  //   }
-  // }, [prevAmt]);
-
   const handleSubmit = async () => {
+    setSubmitting(true);
     if (inputValue) {
       // onSubmit(selectedOption, inputValue);
       const data = await createCategory(inputValue);
@@ -30,6 +26,7 @@ export default function AddNewCategoryModal({ isOpen, onClose }: ModalProps) {
       setInputValue("");
       onClose();
     }
+    setSubmitting(false);
   };
 
   if (!isOpen) return null;
@@ -70,6 +67,7 @@ export default function AddNewCategoryModal({ isOpen, onClose }: ModalProps) {
           </button>
           <button
             onClick={handleSubmit}
+            disabled={submitting}
             className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
           >
             Submit

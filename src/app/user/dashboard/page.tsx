@@ -17,6 +17,7 @@ import UserEditModal from "@/components/modals/UserEditModal";
 import LineChart from "@/components/d3charts/LineChart";
 import BarChart from "@/components/d3charts/BarChart";
 import UpdateBudgetModal from "@/components/modals/UpdateBudgetModal";
+import FullScreenLoader from "@/components/misc/FullScreenLoader";
 
 const sampleData = [
   { id: 1, name: "Item 1", category: "Food", value: "$10" },
@@ -30,6 +31,7 @@ export default function Page() {
   const userCookie = Cookies.get("user");
   const user = userCookie ? JSON.parse(userCookie) : null;
 
+  const [loading, setLoading] = useState(false);
   const [currentIncomePage, setCurrentIncomePage] = useState(0);
   const [currentExpensePage, setCurrentExpensePage] = useState(0);
   const [userBudget, setUserBudget] = useState(0);
@@ -46,10 +48,12 @@ export default function Page() {
   const [type, setType] = useState("");
 
   const fetchIncomeData = async () => {
+    setLoading(true);
     const income_data = await getUserIncome(user._id, currentIncomePage, 5);
     console.log("🚀 ~ fetchIncomeData ~ income_data:", income_data);
     setTotalIncome(income_data.totalAmount);
     setIncomeCategory(income_data.category);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -57,10 +61,12 @@ export default function Page() {
   }, [currentIncomePage]);
 
   const fetchExpenseData = async () => {
+    setLoading(true);
     const expense_data = await getUserExpense(user._id, currentExpensePage, 5);
     console.log("🚀 ~ fetchExpenseData ~ expense_data:", expense_data);
     setTotalExpense(expense_data.totalAmount);
     setExpenseCategory(expense_data.category);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -68,9 +74,11 @@ export default function Page() {
   }, [currentExpensePage]);
 
   const fetchBudget = async () => {
+    setLoading(true);
     const data = await getUserBudget(user._id);
     console.log("🚀 ~ fetchBudget ~ data:", typeof data.amount);
     setUserBudget(data.amount);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -78,6 +86,7 @@ export default function Page() {
   }, []);
 
   const deleteUserCategory = async (type: string, categoryId: string) => {
+    setLoading(true);
     const reqBody = {
       userId: user._id,
       categoryId: categoryId,
@@ -98,12 +107,14 @@ export default function Page() {
         toast.error(error);
       }
     }
+    setLoading(false);
     fetchIncomeData();
     fetchExpenseData();
   };
 
   return (
     <div>
+      {loading && <FullScreenLoader />}
       <div className="my-3">
         <div className="flex justify-between items-center border-t border-b border-gray-300 py-2 overflow-auto">
           <div className="card p-4">
