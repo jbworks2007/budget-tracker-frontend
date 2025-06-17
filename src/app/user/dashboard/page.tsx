@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import UserEditModal from "@/components/modals/UserEditModal";
 import LineChart from "@/components/d3charts/LineChart";
 import BarChart from "@/components/d3charts/BarChart";
+import UpdateBudgetModal from "@/components/modals/UpdateBudgetModal";
 
 const sampleData = [
   { id: 1, name: "Item 1", category: "Food", value: "$10" },
@@ -38,6 +39,7 @@ export default function Page() {
   const [expenseCategory, setExpenseCategory] = useState<UserCategory[]>([]);
   const [showUCM, setShowUCM] = useState(false);
   const [showUEM, setShowUEM] = useState(false);
+  const [showUBM, setShowUBM] = useState(false);
   const [categoryId, setCategoryId] = useState("");
   const [categoryName, setCategoryName] = useState("");
   const [prevAmount, setPrevAmount] = useState(0);
@@ -161,7 +163,16 @@ export default function Page() {
                 <LuHandCoins size={25} className="text-amber-500" />
               </div>
               <div className="data ml-5">
-                <div className="text-lg tracking-wider font-semibold">Budget</div>
+                <div className="flex justify-between items-center">
+                  <div className="text-lg tracking-wider font-semibold">Budget</div>
+                  <div
+                    className="bg-gray-100 hover:bg-gray-200 rounded-full p-1 cursor-pointer"
+                    onClick={() => setShowUBM(!showUBM)}
+                  >
+                    <CiEdit size={18} className="text-amber-500" />
+                  </div>
+                </div>
+
                 <div className="text-lg">
                   <span className="text-gray-400">total</span>
                   <span className="mx-5 text-amber-500">{userBudget.toFixed(2) ?? 0}</span>
@@ -193,10 +204,10 @@ export default function Page() {
         <div className="conatiner">
           <div className="grid lg:grid-cols-2 lg:gap-2">
             <div className="chart1">
-              <LineChart data={incomeCategory} />
+              <BarChart data={incomeCategory} />
             </div>
             <div className="chart2">
-              <BarChart data={incomeCategory} />
+              <LineChart data={expenseCategory} />
             </div>
           </div>
         </div>
@@ -211,7 +222,7 @@ export default function Page() {
                   <div className="title text-xl font-semibold">Income & Earnings</div>
                   <div className="add-btn">
                     <button
-                      className="bg-green-200 font-medium hover:bg-green-300 px-3 text-sm rounded-lg"
+                      className="bg-green-200 font-medium hover:bg-green-300 px-3 text-sm rounded-lg cursor-pointer"
                       onClick={() => {
                         setShowUCM(!showUCM), setType("income");
                       }}
@@ -241,7 +252,7 @@ export default function Page() {
                             <td className="px-3 py-3">{item.amount}</td>
                             <td className="px-3 py-3 text-center">
                               <button
-                                className="p-2 rounded-full bg-blue-100 hover:bg-blue-200"
+                                className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 cursor-pointer"
                                 onClick={() => {
                                   setShowUEM(!showUEM);
                                   setType("income");
@@ -255,7 +266,7 @@ export default function Page() {
                             </td>
                             <td className="px-4 py-3 text-center">
                               <button
-                                className="p-2 rounded-full bg-red-100 hover:bg-red-200"
+                                className="p-2 rounded-full bg-red-100 hover:bg-red-200 cursor-pointer"
                                 onClick={() => deleteUserCategory("income", item.categoryId)}
                               >
                                 <CiTrash size={16} className="text-red-600" />
@@ -283,7 +294,7 @@ export default function Page() {
                   <div className="title text-xl font-semibold">Expenses & Payables</div>
                   <div className="add-btn">
                     <button
-                      className="bg-red-200 font-medium hover:bg-red-300 px-3 text-sm rounded-lg"
+                      className="bg-red-200 font-medium hover:bg-red-300 px-3 text-sm rounded-lg cursor-pointer"
                       onClick={() => {
                         setShowUCM(!showUCM), setType("expense");
                       }}
@@ -313,7 +324,7 @@ export default function Page() {
                             <td className="px-3 py-3">{item.amount}</td>
                             <td className="px-3 py-3 text-center">
                               <button
-                                className="p-2 rounded-full bg-blue-100 hover:bg-blue-200"
+                                className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 cursor-pointer"
                                 onClick={() => {
                                   setShowUEM(!showUEM);
                                   setType("expense");
@@ -327,7 +338,7 @@ export default function Page() {
                             </td>
                             <td className="px-4 py-3 text-center">
                               <button
-                                className="p-2 rounded-full bg-red-100 hover:bg-red-200"
+                                className="p-2 rounded-full bg-red-100 hover:bg-red-200 cursor-pointer"
                                 onClick={() => deleteUserCategory("expense", item.categoryId)}
                               >
                                 <CiTrash size={16} className="text-red-600" />
@@ -374,6 +385,16 @@ export default function Page() {
         categoryId={categoryId}
         categoryName={categoryName}
         prevAmt={prevAmount}
+      />
+
+      {/* UPDATE BUDGET MODAL */}
+      <UpdateBudgetModal
+        isOpen={showUBM}
+        onClose={() => {
+          setShowUBM(false);
+          fetchBudget();
+        }}
+        prevAmt={userBudget}
       />
     </div>
   );

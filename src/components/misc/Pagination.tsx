@@ -55,7 +55,7 @@ const Pagination = ({ totalEntries, rowsPerPage, initialPage = 1, onPageChange }
         {/* Previous */}
         <button
           onClick={() => goToPage(currentPage - 1)}
-          className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-20"
+          className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-20 cursor-pointer"
           disabled={currentPage === 1}
         >
           <LuCircleChevronLeft size={25} className="" />
@@ -66,7 +66,7 @@ const Pagination = ({ totalEntries, rowsPerPage, initialPage = 1, onPageChange }
           <button
             key={page}
             onClick={() => goToPage(page)}
-            className={`w-8 h-8 rounded-full text-sm flex items-center justify-center ${
+            className={`w-8 h-8 rounded-full text-sm cursor-pointer flex items-center justify-center ${
               page === currentPage ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -77,7 +77,7 @@ const Pagination = ({ totalEntries, rowsPerPage, initialPage = 1, onPageChange }
         {/* Next */}
         <button
           onClick={() => goToPage(currentPage + 1)}
-          className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-20"
+          className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-20 cursor-pointer"
           disabled={currentPage === totalPages}
         >
           <LuCircleChevronRight size={25} className="" />
