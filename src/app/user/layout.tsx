@@ -50,7 +50,7 @@ export default function UserLayout({
   }, []);
 
   return (
-    <div className="bg-[url('/bg.svg')] bg-cover bg-center w-full md:p-8">
+    <div className="bg-[url('/bg.svg')] bg-cover bg-center w-full min-h-screen h-full md:p-8">
       <div className="w-full min-h-full bg-white p-4 md:p-8 rounded-2xl shadow-lg">
         {/* user bar */}
         <div className="user-bar min-w-full">

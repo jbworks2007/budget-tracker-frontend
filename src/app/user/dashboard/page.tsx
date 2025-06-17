@@ -115,7 +115,7 @@ export default function Page() {
                 <div className="text-lg tracking-wider font-semibold">Earnings</div>
                 <div className="text-lg">
                   <span className="text-gray-400">total</span>
-                  <span className="mx-5 text-green-500">{totalIncome.toFixed(2) ?? 0}</span>
+                  <span className="mx-5 text-green-500">{totalIncome ? totalIncome.toFixed(2) : 0}</span>
                 </div>
               </div>
             </div>
@@ -132,7 +132,7 @@ export default function Page() {
                 <div className="text-lg tracking-wider font-semibold">Expense</div>
                 <div className="text-lg">
                   <span className="text-gray-400">total</span>
-                  <span className="mx-5 text-red-500">{totalExpense.toFixed(2) ?? 0}</span>
+                  <span className="mx-5 text-red-500">{totalExpense ? totalExpense.toFixed(2) : 0}</span>
                 </div>
               </div>
             </div>
@@ -149,7 +149,9 @@ export default function Page() {
                 <div className="text-lg tracking-wider font-semibold">Balance</div>
                 <div className="text-lg">
                   <span className="text-gray-400">total</span>
-                  <span className="mx-5 text-blue-500">{(totalIncome - totalExpense).toFixed(2)}</span>
+                  <span className="mx-5 text-blue-500">
+                    {totalIncome && totalExpense ? (totalIncome - totalExpense).toFixed(2) : 0}
+                  </span>
                 </div>
               </div>
             </div>
@@ -175,7 +177,7 @@ export default function Page() {
 
                 <div className="text-lg">
                   <span className="text-gray-400">total</span>
-                  <span className="mx-5 text-amber-500">{userBudget.toFixed(2) ?? 0}</span>
+                  <span className="mx-5 text-amber-500">{userBudget ? userBudget.toFixed(2) : 0}</span>
                 </div>
               </div>
             </div>
@@ -192,7 +194,11 @@ export default function Page() {
                 <div className="text-lg tracking-wider font-semibold">Savings</div>
                 <div className="text-lg">
                   <span className="text-gray-400">total</span>
-                  <span className="mx-5 text-purple-500">{(totalIncome - totalExpense - userBudget).toFixed(2)}</span>
+                  <span className="mx-5 text-purple-500">
+                    {totalIncome && totalExpense && userBudget
+                      ? (totalIncome - totalExpense - userBudget).toFixed(2)
+                      : 0}
+                  </span>
                 </div>
               </div>
             </div>
@@ -204,10 +210,18 @@ export default function Page() {
         <div className="conatiner">
           <div className="grid lg:grid-cols-2 lg:gap-2">
             <div className="chart1">
-              <BarChart data={incomeCategory} />
+              {incomeCategory ? (
+                <BarChart data={incomeCategory} />
+              ) : (
+                <div className="p-5 text-center">No Data Found. Start adding by some income</div>
+              )}
             </div>
             <div className="chart2">
-              <LineChart data={expenseCategory} />
+              {expenseCategory ? (
+                <LineChart data={expenseCategory} />
+              ) : (
+                <div className="p-5 text-center">No Data Found. Start adding by some expense</div>
+              )}
             </div>
           </div>
         </div>
@@ -232,51 +246,55 @@ export default function Page() {
                   </div>
                 </div>
 
-                <div className="overflow-y-auto max-h-[200px]">
-                  <table className="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead className="bg-gray-100 sticky top-0">
-                      <tr>
-                        <th className="px-3 py-2 text-left font-semibold text-gray-600">#</th>
-                        <th className="px-3 py-2 text-left font-semibold text-gray-600">Category</th>
-                        <th className="px-3 py-2 text-left font-semibold text-gray-600">Value</th>
-                        <th className="px-3 py-2 text-center font-semibold text-gray-600">Edit</th>
-                        <th className="px-3 py-2 text-center font-semibold text-gray-600">Delete</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {incomeCategory &&
-                        incomeCategory.map((item, index) => (
-                          <tr key={index}>
-                            <td className="px-3 py-3">{index + 1}</td>
-                            <td className="px-3 py-3">{item.name}</td>
-                            <td className="px-3 py-3">{item.amount}</td>
-                            <td className="px-3 py-3 text-center">
-                              <button
-                                className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 cursor-pointer"
-                                onClick={() => {
-                                  setShowUEM(!showUEM);
-                                  setType("income");
-                                  setCategoryId(item.categoryId);
-                                  setCategoryName(item.name);
-                                  setPrevAmount(item.amount);
-                                }}
-                              >
-                                <CiEdit size={16} className="text-blue-600" />
-                              </button>
-                            </td>
-                            <td className="px-4 py-3 text-center">
-                              <button
-                                className="p-2 rounded-full bg-red-100 hover:bg-red-200 cursor-pointer"
-                                onClick={() => deleteUserCategory("income", item.categoryId)}
-                              >
-                                <CiTrash size={16} className="text-red-600" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                </div>
+                {incomeCategory ? (
+                  <div className="overflow-y-auto max-h-[200px]">
+                    <table className="min-w-full divide-y divide-gray-200 text-sm">
+                      <thead className="bg-gray-100 sticky top-0">
+                        <tr>
+                          <th className="px-3 py-2 text-left font-semibold text-gray-600">#</th>
+                          <th className="px-3 py-2 text-left font-semibold text-gray-600">Category</th>
+                          <th className="px-3 py-2 text-left font-semibold text-gray-600">Value</th>
+                          <th className="px-3 py-2 text-center font-semibold text-gray-600">Edit</th>
+                          <th className="px-3 py-2 text-center font-semibold text-gray-600">Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {incomeCategory &&
+                          incomeCategory.map((item, index) => (
+                            <tr key={index}>
+                              <td className="px-3 py-3">{index + 1}</td>
+                              <td className="px-3 py-3">{item.name}</td>
+                              <td className="px-3 py-3">{item.amount}</td>
+                              <td className="px-3 py-3 text-center">
+                                <button
+                                  className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 cursor-pointer"
+                                  onClick={() => {
+                                    setShowUEM(!showUEM);
+                                    setType("income");
+                                    setCategoryId(item.categoryId);
+                                    setCategoryName(item.name);
+                                    setPrevAmount(item.amount);
+                                  }}
+                                >
+                                  <CiEdit size={16} className="text-blue-600" />
+                                </button>
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <button
+                                  className="p-2 rounded-full bg-red-100 hover:bg-red-200 cursor-pointer"
+                                  onClick={() => deleteUserCategory("income", item.categoryId)}
+                                >
+                                  <CiTrash size={16} className="text-red-600" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="p-5 text-center">No Data Found. Start adding by some income</div>
+                )}
 
                 {/* Pagination */}
                 <Pagination
@@ -304,51 +322,55 @@ export default function Page() {
                   </div>
                 </div>
 
-                <div className="overflow-y-auto max-h-[200px]">
-                  <table className="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead className="bg-gray-100 sticky top-0">
-                      <tr>
-                        <th className="px-3 py-2 text-left font-semibold text-gray-600">#</th>
-                        <th className="px-3 py-2 text-left font-semibold text-gray-600">Category</th>
-                        <th className="px-3 py-2 text-left font-semibold text-gray-600">Value</th>
-                        <th className="px-3 py-2 text-center font-semibold text-gray-600">Edit</th>
-                        <th className="px-3 py-2 text-center font-semibold text-gray-600">Delete</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {expenseCategory &&
-                        expenseCategory.map((item, index) => (
-                          <tr key={index}>
-                            <td className="px-3 py-3">{index + 1}</td>
-                            <td className="px-3 py-3">{item.name}</td>
-                            <td className="px-3 py-3">{item.amount}</td>
-                            <td className="px-3 py-3 text-center">
-                              <button
-                                className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 cursor-pointer"
-                                onClick={() => {
-                                  setShowUEM(!showUEM);
-                                  setType("expense");
-                                  setCategoryId(item.categoryId);
-                                  setCategoryName(item.name);
-                                  setPrevAmount(item.amount);
-                                }}
-                              >
-                                <CiEdit size={16} className="text-blue-600" />
-                              </button>
-                            </td>
-                            <td className="px-4 py-3 text-center">
-                              <button
-                                className="p-2 rounded-full bg-red-100 hover:bg-red-200 cursor-pointer"
-                                onClick={() => deleteUserCategory("expense", item.categoryId)}
-                              >
-                                <CiTrash size={16} className="text-red-600" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                </div>
+                {expenseCategory ? (
+                  <div className="overflow-y-auto max-h-[200px]">
+                    <table className="min-w-full divide-y divide-gray-200 text-sm">
+                      <thead className="bg-gray-100 sticky top-0">
+                        <tr>
+                          <th className="px-3 py-2 text-left font-semibold text-gray-600">#</th>
+                          <th className="px-3 py-2 text-left font-semibold text-gray-600">Category</th>
+                          <th className="px-3 py-2 text-left font-semibold text-gray-600">Value</th>
+                          <th className="px-3 py-2 text-center font-semibold text-gray-600">Edit</th>
+                          <th className="px-3 py-2 text-center font-semibold text-gray-600">Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {expenseCategory &&
+                          expenseCategory.map((item, index) => (
+                            <tr key={index}>
+                              <td className="px-3 py-3">{index + 1}</td>
+                              <td className="px-3 py-3">{item.name}</td>
+                              <td className="px-3 py-3">{item.amount}</td>
+                              <td className="px-3 py-3 text-center">
+                                <button
+                                  className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 cursor-pointer"
+                                  onClick={() => {
+                                    setShowUEM(!showUEM);
+                                    setType("expense");
+                                    setCategoryId(item.categoryId);
+                                    setCategoryName(item.name);
+                                    setPrevAmount(item.amount);
+                                  }}
+                                >
+                                  <CiEdit size={16} className="text-blue-600" />
+                                </button>
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <button
+                                  className="p-2 rounded-full bg-red-100 hover:bg-red-200 cursor-pointer"
+                                  onClick={() => deleteUserCategory("expense", item.categoryId)}
+                                >
+                                  <CiTrash size={16} className="text-red-600" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="p-5 text-center">No Data Found. Start adding by some expense</div>
+                )}
 
                 {/* Pagination */}
                 <Pagination
